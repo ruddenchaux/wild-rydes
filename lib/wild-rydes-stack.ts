@@ -2,7 +2,6 @@ import * as cdk from '@aws-cdk/core';
 import * as amplify from '@aws-cdk/aws-amplify';
 import * as codebuild from '@aws-cdk/aws-codebuild';
 import * as cognito from '@aws-cdk/aws-cognito';
-
 export class WildRydesStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -12,16 +11,23 @@ export class WildRydesStack extends cdk.Stack {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: 'ruddenchaux',
         repository: 'wild-rydes',
-        oauthToken: cdk.SecretValue.secretsManager('github-access-token') as any
+        oauthToken: cdk.SecretValue.secretsManager('github-access-token') as any,
       }),
+      customRules: [
+        {
+          source: '/<*>',
+          target: '/index.html',
+          status: amplify.RedirectStatus.NOT_FOUND
+        }
+      ],
       environmentVariables: {
-        AMPLIFY_MONOREPO_APP_ROOT: 'frontend'
+        AMPLIFY_MONOREPO_APP_ROOT: 'frontend',
+        AMPLIFY_DIFF_DEPLOY: 'false'
       },
-      buildSpec: codebuild.BuildSpec.fromObject({
+      buildSpec: codebuild.BuildSpec.fromObjectToYaml({
         version: '1.0',
         applications: [
           {
-            appRoot: 'frontend',
             frontend: {
               phases: {
                 build: {
@@ -30,10 +36,15 @@ export class WildRydesStack extends cdk.Stack {
               },
               artifacts: {
                 baseDirectory: '/',
-                files:
-                - '**/*'
+                files: [
+                  '**/*'
+                ]
+              },
+              cache: {
+                paths: []
               }
-            }
+            },
+            appRoot: 'frontend',
           }
         ]
       })
@@ -44,6 +55,18 @@ export class WildRydesStack extends cdk.Stack {
     // create cognito to manage the clients auth
     const pool = new cognito.UserPool(this, 'WildRydesCognito', {
       userPoolName: 'wildrydes-userpool',
+      signInCaseSensitive: false,
+      selfSignUpEnabled: true,
+      userVerification: {
+        emailStyle: cognito.VerificationEmailStyle.CODE
+      },
+      email: cognito.UserPoolEmail.withCognito(),
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: false
+        }
+      }
     });
 
     // create pool client
