@@ -23,6 +23,7 @@
   "dependencies": {
     "@aws-cdk/aws-amplify": "^1.133.0",
     "@aws-cdk/aws-codebuild": "^1.133.0",
+    "@aws-cdk/aws-cognito": "^1.133.0",
     "@aws-cdk/core": "1.132.0",
     "source-map-support": "^0.5.16"
   }
