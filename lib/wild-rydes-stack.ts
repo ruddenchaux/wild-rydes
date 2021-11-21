@@ -57,8 +57,8 @@ export class WildRydesStack extends cdk.Stack {
       userPoolName: 'wildrydes-userpool',
       signInCaseSensitive: false,
       selfSignUpEnabled: true,
-      userVerification: {
-        emailStyle: cognito.VerificationEmailStyle.CODE
+      autoVerify: {
+        email: true
       },
       email: cognito.UserPoolEmail.withCognito(),
       standardAttributes: {
