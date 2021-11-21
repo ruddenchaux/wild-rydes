@@ -12,25 +12,25 @@ export class WildRydesStack extends cdk.Stack {
         repository: 'wild-rydes',
         oauthToken: cdk.SecretValue.secretsManager('github-access-token') as any
       }),
-
-      buildSpec: codebuild.BuildSpec.fromSourceFilename('frontend/amplify.yml')
-      
-      // buildSpec: codebuild.BuildSpec.fromObjectToYaml({
-      //   version: '1.0',
-      //   frontend: {
-      //     appRoot: "frontend",
-      //     phases: {
-      //       build: {
-      //         commands: []
-      //       }
-      //     },
-      //     artifacts: {
-      //       baseDirectory: '/',
-      //       files:
-      //       - '**/*'
-      //     }
-      //   }
-      // })
+      environmentVariables: {
+        AMPLIFY_MONOREPO_APP_ROOT: 'frontend'
+      },
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: '1.0',
+        frontend: {
+          appRoot: 'frontend',
+          phases: {
+            build: {
+              commands: []
+            }
+          },
+          artifacts: {
+            baseDirectory: '/',
+            files:
+            - '**/*'
+          }
+        }
+      })
     });
 
     amplifyApp.addBranch('master');
