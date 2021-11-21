@@ -19,21 +19,23 @@ export class WildRydesStack extends cdk.Stack {
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '1.0',
-        applications: {
-          frontend: {
+        applications: [
+          {
             appRoot: 'frontend',
-            phases: {
-              build: {
-                commands: []
+            frontend: {
+              phases: {
+                build: {
+                  commands: []
+                }
+              },
+              artifacts: {
+                baseDirectory: '/',
+                files:
+                - '**/*'
               }
-            },
-            artifacts: {
-              baseDirectory: '/',
-              files:
-              - '**/*'
             }
           }
-        }
+        ]
       })
     });
 
