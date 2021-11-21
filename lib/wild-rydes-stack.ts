@@ -1,7 +1,12 @@
+import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
 import * as amplify from '@aws-cdk/aws-amplify';
 import * as codebuild from '@aws-cdk/aws-codebuild';
 import * as cognito from '@aws-cdk/aws-cognito';
+import * as dynamodb from '@aws-cdk/aws-dynamodb';
+import * as iam from '@aws-cdk/aws-iam';
+import * as lambda from '@aws-cdk/aws-lambda';
+
 export class WildRydesStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -74,10 +79,40 @@ export class WildRydesStack extends cdk.Stack {
       generateSecret: false
     });
 
-    // print the cognito pool id
-    new cdk.CfnOutput(this, 'UserPoolId', { value: pool.userPoolId });
+    // create dynamodb table
+    const table = new dynamodb.Table(this, 'Rides', {
+      partitionKey: { name: 'RideId', type: dynamodb.AttributeType.STRING },
+    });
+
+    // create role for lambda
+    const role = new iam.Role(this, 'WildRydesLambda', {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+    });
+
+    // create policy to write on dynamodb table
+    role.addToPolicy(new iam.PolicyStatement({
+      resources: [table.tableArn],
+      actions: ['dynamodb:PutItem'],
+    }));
+
+    // create policy for lambda
+    role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
+
+    // create lambda
+    const lambdaFn = new lambda.Function(this, 'WildRydesLambda', {
+      runtime: lambda.Runtime.NODEJS_6_10,
+      handler: 'requestUnicorn.handler',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../backend')),
+      role
+    });
 
     // print the cognito poll client id
     new cdk.CfnOutput(this, 'UserPoolClientId', { value: poolClient.userPoolClientId });
+
+    // print the cognito pool id
+    new cdk.CfnOutput(this, 'UserPoolId', { value: pool.userPoolId });
+
+    // print the cognito pool id
+    // new cdk.CfnOutput(this, 'UserPoolId', { value: lambdaFn. });
   }
 }
