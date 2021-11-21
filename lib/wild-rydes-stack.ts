@@ -10,7 +10,7 @@ export class WildRydesStack extends cdk.Stack {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: 'ruddenchaux',
         repository: 'wild-rydes',
-        oauthToken: cdk.SecretValue.secretsManager('my-github-token') as any
+        oauthToken: cdk.SecretValue.secretsManager('github-token') as any
       }),
       buildSpec: codebuild.BuildSpec.fromObjectToYaml({
         version: '1.0',
