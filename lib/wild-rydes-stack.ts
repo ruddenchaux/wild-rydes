@@ -6,11 +6,11 @@ export class WildRydesStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const amplifyApp = new amplify.App(this, 'MyApp', {
+    const amplifyApp = new amplify.App(this, 'WildRydes', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: 'ruddenchaux',
         repository: 'wild-rydes',
-        oauthToken: cdk.SecretValue.secretsManager('github-token') as any
+        oauthToken: cdk.SecretValue.secretsManager('github-access-token') as any
       }),
       buildSpec: codebuild.BuildSpec.fromObjectToYaml({
         version: '1.0',
@@ -29,5 +29,7 @@ export class WildRydesStack extends cdk.Stack {
         }
       })
     });
+
+    amplifyApp.addBranch('master');
   }
 }
