@@ -73,7 +73,8 @@ export class WildRydesStack extends cdk.Stack {
   private createCognitoUserPool(): { userPool: cognito.UserPool; userPoolClient: cognito.UserPoolClient } {
     // create cognito to manage the clients auth
     const userPool = new cognito.UserPool(this, 'WildRydesCognito', {
-      userPoolName: 'wildrydes-userpool',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      userPoolName: 'WildRydesCognitoUserpool',
       signInCaseSensitive: false,
       selfSignUpEnabled: true,
       autoVerify: { email: true },
@@ -95,6 +96,7 @@ export class WildRydesStack extends cdk.Stack {
   private createDynamoDbTable(): dynamodb.Table {
     // create dynamodb table
     return new dynamodb.Table(this, 'Rides', {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
       tableName: 'Rides',
       partitionKey: { name: 'RideId', type: dynamodb.AttributeType.STRING }
     });
