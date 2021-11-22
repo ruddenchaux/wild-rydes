@@ -165,6 +165,6 @@ export class WildRydesStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'UserPoolClientId', { value: userPoolClient.userPoolClientId });
 
     // print the invoke url of the api
-    new cdk.CfnOutput(this, 'InvokeUrlRestAPI', { value: api.urlForPath('/ride') });
+    new cdk.CfnOutput(this, 'InvokeUrlRestAPI', { value: api.urlForPath() });
   }
 }
