@@ -94,7 +94,10 @@ export class WildRydesStack extends cdk.Stack {
 
   private createDynamoDbTable(): dynamodb.Table {
     // create dynamodb table
-    return new dynamodb.Table(this, 'Rides', { partitionKey: { name: 'RideId', type: dynamodb.AttributeType.STRING } });
+    return new dynamodb.Table(this, 'Rides', {
+      tableName: 'Rides',
+      partitionKey: { name: 'RideId', type: dynamodb.AttributeType.STRING }
+    });
   }
 
   private createIamRoleForDynamoTableAndLambda(table: dynamodb.Table): iam.Role {
