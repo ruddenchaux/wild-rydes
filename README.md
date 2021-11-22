@@ -1,8 +1,6 @@
-# Welcome to your CDK TypeScript project!
+# Wild rydes
 
-This is a blank project for TypeScript development with CDK.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Implementation of https://aws.amazon.com/it/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito
 
 ## Useful commands
 
@@ -13,7 +11,7 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 - `cdk diff` compare deployed stack with current state
 - `cdk synth` emits the synthesized CloudFormation template
 
-## Create github access token
+## Create AWS secret for github access token
 
 ```
 aws secretsmanager create-secret --name github-access-token --secret-string <github-token>
