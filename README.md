@@ -2,6 +2,10 @@
 
 Implementation of https://aws.amazon.com/it/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito
 
+## Architecture
+
+<img src="./Serverless_Architecture.png" />
+
 ## Useful commands
 
 - `npm run build` compile typescript to js
